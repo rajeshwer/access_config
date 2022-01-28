@@ -12,7 +12,7 @@ jobs:
 
       - name: validate json
         run: |
-         cat test.json|jq  | echo ${PIPESTATUS[1]}
+         cat access.json|jq  | echo ${PIPESTATUS[1]}
 
       - name: Read access.json
         id: access
