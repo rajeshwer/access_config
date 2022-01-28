@@ -42,7 +42,7 @@ jobs:
         with:
           sqs-url: ${{ secrets.sqs_url }}
           #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
-          message: echo "${{fromJson(steps.access.outputs.content).username}}"
+          message: "${{fromJson(steps.access.outputs.content).username}}"
           
 
       - name: update access_config
