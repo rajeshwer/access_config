@@ -19,7 +19,10 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
             path: ./access.json
+            
       - name: Echo access.json
+        if: |
+            github.event.pull_request.merged == true      
         #run: echo "${{ steps.access.outputs.content }}"   
         run: echo "${{fromJson(steps.access.outputs.content).username}}"
 
@@ -39,7 +42,7 @@ jobs:
         with:
           sqs-url: ${{ secrets.sqs_url }}
           #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
-          message: "${{steps.access.outputs.content}}"
+          message: echo "${{fromJson(steps.access.outputs.content).username}}"
           
 
       - name: update access_config
