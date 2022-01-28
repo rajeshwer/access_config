@@ -12,7 +12,7 @@ jobs:
 
       - name: validate json
         run: |
-         cat test.json|jq  | echo ${PIPESTATUS[1]}
+         cat access.json|jq
 
       - name: Read access.json
         id: access
@@ -49,7 +49,7 @@ jobs:
         if: |
             github.event.pull_request.merged == true      
         run: |
-         truncate -s 0  access.json
+         truncate -s 0 access.json
 
       - name: configure git user
         if: |
