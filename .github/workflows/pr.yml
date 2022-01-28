@@ -10,6 +10,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0 
 
+      - name: validate json
+        run: |
+         cat test.json|jq  | echo ${PIPESTATUS[1]}
+
       - name: Read access.json
         id: access
         uses: juliangruber/read-file-action@v1
@@ -19,16 +23,28 @@ jobs:
         #run: echo "${{ steps.access.outputs.content }}"   
         run: echo "${{fromJson(steps.access.outputs.content).username}}"
 
-      - name: Echo access.json
-        run: cat access.json
+      - name: ConfigureAws  
+        if: |
+            github.event.pull_request.merged == true
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
+
+      - name: send message 
+        if: |
+            github.event.pull_request.merged == true
+        uses: isbang/sqs-action@v0.1.1
+        with:
+          sqs-url: ${{ secrets.sqs_url }}
+          #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
+          message: "${{steps.access.outputs.content}}"
+          
 
       - name: update access_config
         run: |
          truncate -s 0  access.json
-
-
-      - name: Echo access.json
-        run: cat access.json
 
       - name: stage changed files
         run: git config --global user.name "Your Name"
@@ -42,21 +58,4 @@ jobs:
       - name: push code to main
         run: git push origin HEAD:main
 
-
-      - name: ConfigureAws  
-        if: |
-            github.event.pull_request.merged == true
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-1
         
-      #- name: send message 
-      #  if: |
-      #      github.event.pull_request.merged == true
-      #  uses: isbang/sqs-action@v0.1.1
-      #  with:
-      #    sqs-url: ${{ secrets.sqs_url }}
-          #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
-      #    message: "${{steps.access.outputs.content}}"
