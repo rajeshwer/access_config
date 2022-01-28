@@ -1,8 +1,3 @@
-# Please make sure json in valid use below format
-# {                       
-#        "username": "your_aws_account_username",
-#        "endtimeinseconds": "time in seconds eg:3600"
-# }
 {                       
         "username": "user1",
         "endtimeinseconds": "71200"
