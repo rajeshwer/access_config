@@ -49,7 +49,7 @@ jobs:
         if: |
             github.event.pull_request.merged == true      
         run: |
-         sed -i 4,42d access.json
+         truncate -s 0 access.json
 
       - name: configure git user
         if: |
