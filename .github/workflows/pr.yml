@@ -46,19 +46,31 @@ jobs:
           
 
       - name: update access_config
+        if: |
+            github.event.pull_request.merged == true      
         run: |
          truncate -s 0  access.json
 
-      - name: stage changed files
-        run: git config --global user.name "Your Name"
+      - name: configure git user
+        if: |
+            github.event.pull_request.merged == true      
+        run: git config --global user.name "botuser"
 
       - name: stage changed files
+        if: |
+            github.event.pull_request.merged == true      
         run: git add .
       - name: commit changed files
+        if: |
+            github.event.pull_request.merged == true      
         run: git commit -m "Auto updating access.json"
       - name: fetch from main
+        if: |
+            github.event.pull_request.merged == true      
         run: git fetch origin main
       - name: push code to main
+        if: |
+            github.event.pull_request.merged == true      
         run: git push origin HEAD:main
 
         
