@@ -16,7 +16,9 @@ jobs:
         id: readbody
         with:
           script: |
-            const result = await github.request(context.payload.pull_request.issue_url)            
+            const result = await github.request(context.payload.pull_request.merged_at)            
             console.log(result.data.body)
             return (result.data.body)
           result-encoding: string
+      - name: Get result
+        run: echo "${{steps.readbody.outputs.result}}"  
