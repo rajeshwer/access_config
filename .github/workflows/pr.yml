@@ -10,67 +10,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.4.0 
 
-      - name: validate json
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v14.3
+
+      - name: List all changed files
         run: |
-         cat access.json|jq
-
-      - name: Read access.json
-        id: access
-        uses: juliangruber/read-file-action@v1
-        with:
-            path: ./access.json
-            
-      - name: Echo access.json
-        if: |
-            github.event.pull_request.merged == true      
-        #run: echo "${{ steps.access.outputs.content }}"   
-        run: echo "${{fromJson(steps.access.outputs.content).username}}"
-
-      - name: ConfigureAws  
-        if: |
-            github.event.pull_request.merged == true
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-west-1
-
-      - name: send message 
-        if: |
-            github.event.pull_request.merged == true
-        uses: isbang/sqs-action@v0.1.1
-        with:
-          sqs-url: ${{ secrets.sqs_url }}
-          #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
-          message: "${{fromJson(steps.access.outputs.content).username}}"
-          
-
-      - name: update access_config
-        if: |
-            github.event.pull_request.merged == true      
-        run: |
-         truncate -s 0 access.json
-
-      - name: configure git user
-        if: |
-            github.event.pull_request.merged == true      
-        run: git config --global user.name "botuser"
-
-      - name: stage changed files
-        if: |
-            github.event.pull_request.merged == true      
-        run: git add .
-      - name: commit changed files
-        if: |
-            github.event.pull_request.merged == true      
-        run: git commit -m "Auto updating access.json"
-      - name: fetch from main
-        if: |
-            github.event.pull_request.merged == true      
-        run: git fetch origin main
-      - name: push code to main
-        if: |
-            github.event.pull_request.merged == true      
-        run: git push origin HEAD:main
-
-        
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
