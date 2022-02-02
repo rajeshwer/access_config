@@ -8,19 +8,26 @@ on:
       - 'access_request/accessRequest/**'      
 
 jobs:
-  changedfiles:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      ts: ${{ steps.changes.outputs.ts }}
+  build:
+    runs-on: ubuntu-latest  # windows-latest | macos-latest
+    name: Test changed-files
     steps:
-        # Make sure we have some code to diff.
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0        
-      - name: Get changed files
-        id: changes
-        # Set outputs using the command.
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+
+      - name: Get changed files       
+        id: changed-files
+        uses: tj-actions/changed-files@v14.3
+
+      - name: List all changed files          
         run: |
-          echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .json$ | xargs)"
+          file=()
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            results+=($(bc -l <<< $file))
+          done
+
+          
+      - name: validate json
+        run: |
+         echo ${file[@]}
