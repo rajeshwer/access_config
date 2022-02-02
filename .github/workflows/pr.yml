@@ -13,5 +13,5 @@ jobs:
           fetch-depth: 0
       - name: changed file
         run: |
-          current_commit=`git diff --name-only`
+          current_commit=`git diff --name-only ${{ github.event.pull_request.opened }}`
           echo $current_commit
