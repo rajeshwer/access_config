@@ -14,6 +14,6 @@ jobs:
     steps:
     - name: Dump GitHub context
       env:
-        GITHUB_CONTEXT: ${{ toJson(github.event) }}
+        GITHUB_CONTEXT: ${{ toJson(github.event.pull_request.merged_at) }}
       run: |
         echo "$GITHUB_CONTEXT"
