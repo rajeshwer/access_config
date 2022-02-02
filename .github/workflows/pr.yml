@@ -11,5 +11,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: changed file
         run: |
-           echo `git diff --name-only` 
-           echo ${{ github.event.before }}
+           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
