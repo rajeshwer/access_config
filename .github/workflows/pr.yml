@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - run: git diff-tree --no-commit-id --name-only -r ${{ github.sha }}
+
+      - name: changed file
+        run: |
+          current_commit=`git log -n 1 --pretty=format:%H`
+          echo $current_commit
