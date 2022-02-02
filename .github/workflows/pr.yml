@@ -19,15 +19,7 @@ jobs:
       - name: Get changed files       
         id: changed-files
         uses: tj-actions/changed-files@v14.3
-
-      - name: List all changed files          
-        run: |
-          file=()
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            results+=($(bc -l <<< $file))
-          done
-
-          
+        
       - name: validate json
         run: |
-         echo ${file[@]}
+         echo ${{ steps.changed-files.outputs.all_changed_files }}
