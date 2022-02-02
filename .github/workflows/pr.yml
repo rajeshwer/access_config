@@ -9,8 +9,6 @@ jobs:
     # Map a step output to a job output
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: changed file
         run: |
            echo `git diff --name-only` 
