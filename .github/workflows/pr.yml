@@ -13,6 +13,8 @@ jobs:
     name: Test changed-files
     steps:
       - uses: actions/github-script@v5
+        if: |
+            github.event.pull_request.merged == true       
         id: readbody
         with:
           script: |
@@ -21,4 +23,6 @@ jobs:
             return (result.data.body)
           result-encoding: string
       - name: Get result
+        if: |
+            github.event.pull_request.merged == true       
         run: echo "${{steps.readbody.outputs.result}}"  
