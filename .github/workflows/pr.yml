@@ -12,17 +12,8 @@ jobs:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
     name: Test changed-files
     steps:
-      - uses: actions/github-script@v5
-        if: |
-            github.event.pull_request.merged == true       
-        id: readbody
-        with:
-          script: |
-            const result = await github.request(context.payload.pull_request.merged_at)            
-            console.log(result.data.body)
-            return (result.data.body)
-          result-encoding: string
-      - name: Get result
-        if: |
-            github.event.pull_request.merged == true       
-        run: echo "${{steps.readbody.outputs.result}}"  
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: |
+        echo "$GITHUB_CONTEXT"
