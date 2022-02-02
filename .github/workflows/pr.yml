@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - '/accessRequest'      
+      - 'accessRequest/**'      
   pull_request:
     branches:
       - main
     paths:
-      - '/accessRequest'
+      - 'accessRequest/**'
 
 jobs:
   build:
