@@ -27,4 +27,4 @@ jobs:
           done
       - name: validate json
         run: |
-         echo "$file
+         echo $file
