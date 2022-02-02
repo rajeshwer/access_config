@@ -13,5 +13,5 @@ jobs:
           fetch-depth: 0
       - name: changed file
         run: |
-          current_commit=`git log -n 1 --pretty=format:%H`
+          current_commit=`git diff --name-only`
           echo $current_commit
