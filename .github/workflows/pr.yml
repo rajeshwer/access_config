@@ -10,5 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: changed file
-        run: |
-           echo `git diff-tree --no-commit-id --name-only -r ${{ github.sha }}`
+        run: git diff --name-only
