@@ -14,3 +14,4 @@ jobs:
       - name: changed file
         run: |
            echo `git diff --name-only` 
+           echo ${{ github.event.before }}
