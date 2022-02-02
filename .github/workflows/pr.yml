@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize,edited,closed]
-    paths:
-      - 'access_request/accessRequest/**'      
+    #paths:
+    #  - 'access_request/accessRequest/**'      
 
 jobs:
   build:
