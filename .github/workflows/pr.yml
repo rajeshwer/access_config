@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     steps:
-
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: changed file
         run: |
           current_commit=`git log -n 1 --pretty=format:%H`
