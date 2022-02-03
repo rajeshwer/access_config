@@ -15,5 +15,5 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{github.event.pull_request.merged_at}}
       run: |
-         echo `jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '${{github.event.pull_request.merged_at}} | fromdate'`      
+         echo `jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`      
  
