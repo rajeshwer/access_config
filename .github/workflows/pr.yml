@@ -1,21 +1,19 @@
+name: accessRequest
+
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize,edited,closed]
-    
+    paths:
+      - 'access_request/accessRequest/**'    
+
 jobs:
-  comment:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest  # windows-latest | macos-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2.4.0 
-
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v14.3
-
-      - name: List all changed files
-        run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-          done
+    - name: Get startTime
+      run: |
+         export GITHUB_CONTEXT=`jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
+    - name: echo startTime
+      run: |
+         echo "$GITHUB_CONTEXT"
