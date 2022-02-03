@@ -18,15 +18,13 @@ jobs:
           
       - name: Files changed after PR merge
         id: changes
-        run: echo ::set-output name=docker_tag::$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
+        run: echo ::set-output name=changedFile::$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
       - name: List all added files
-        run: |
-        
-            echo ${{ steps.changes.outputs.docker_tag }}       
-
-      - name: Get startTime
+        run: |      
+            echo ${{ steps.changes.outputs.changedFile }}       
+      - name: Files changed after PR merge
         id: access
-        run: |  
-          echo `jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
-      
-            
+        run: echo ::set-output name=timeStamp::$(jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate')
+      - name: echo timestamp
+        run: |      
+            echo ${{ steps.access.outputs.timeStamp }}         
