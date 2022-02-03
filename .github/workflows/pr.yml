@@ -13,6 +13,6 @@ jobs:
     steps:  
     - name: Get startTime
       env:  
-          GITHUB_CONTEXT=`jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
+          export GITHUB_CONTEXT=`jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
       run: |
          echo $GITHUB_CONTEXT
