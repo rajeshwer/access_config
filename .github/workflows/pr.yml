@@ -19,6 +19,10 @@ jobs:
       - name: Set tag var
         id: vars
         run: echo ::set-output name=docker_tag::$(URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files" FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename'))
+      - name: List all added files
+        run: |
+        
+            echo ${{ steps.vars.outputs.docker_tag }}       
 
       #- name: List all added files
       #  if: |
