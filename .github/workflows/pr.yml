@@ -9,12 +9,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest  # windows-latest | macos-latest
     name: Test changed-files
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
 
       - name: Get changed files       
         id: changed-files
@@ -22,4 +22,11 @@ jobs:
 
       - name: List all changed files          
         run: |
-         echo ${{ steps.changed-files.outputs.all_changed_files }}
+          file=()
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            results+=($(bc -l <<< $file))
+          done
+          
+      - name: validate json
+        run: |
+         echo ${file[@]}
