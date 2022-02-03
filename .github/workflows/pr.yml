@@ -18,7 +18,7 @@ jobs:
           
       - name: Set tag var
         id: vars
-        run: echo ::set-output name=docker_tag::$(URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files" FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename'))
+        run: echo ::set-output name=docker_tag::$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
       - name: List all added files
         run: |
         
@@ -29,7 +29,7 @@ jobs:
       #      github.event.pull_request.merged == true      
       #  run: |
       #    URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files"
-      #    FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename')
+      #    FILES=$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
       #    echo $FILES
       #  env:
       #      FILES: $FILES
