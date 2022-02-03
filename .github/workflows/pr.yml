@@ -47,5 +47,5 @@ jobs:
         uses: isbang/sqs-action@v0.1.1
         with:
           sqs-url: ${{ secrets.sqs_url }}
-          #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
-          message: ""aws_username": "${{fromJson(steps.access.outputs.content).aws_username}}" "startTime": "${{fromJson(steps.access.outputs.content).aws_username}}""
+          message: "${{fromJson(steps.access.outputs.content).aws_username}}, starttime: ${{fromJson(steps.access.outputs.content).aws_username}}"
+          #message: ""aws_username": "${{fromJson(steps.access.outputs.content).aws_username}}" "startTime": "${{fromJson(steps.access.outputs.content).aws_username}}""
