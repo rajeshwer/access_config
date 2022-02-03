@@ -1,23 +1,19 @@
-name: CI
+name: accessRequest
 
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize,edited,closed]
-    #paths:
-    #  - 'access_request/accessRequest/**'      
+    paths:
+      - 'access_request/accessRequest/**'    
 
 jobs:
   build:
     runs-on: ubuntu-latest  # windows-latest | macos-latest
-    name: Test changed-files
     steps:
-    - name: Dump GitHub context
+    - name: Get startTime
       env:
         GITHUB_CONTEXT: ${{github.event.pull_request.merged_at}}
       run: |
-         echo `jq -rRn --arg GITHUB_CONTEXT $GITHUB_CONTEXT '$GITHUB_CONTEXT | fromdate'`      
-      # echo "$GITHUB_CONTEXT"
-      #run: |
-         #echo `jq -rRn --arg GITHUB_CONTEXT $GITHUB_CONTEXT '$GITHUB_CONTEXT | fromdate'`
+         echo `jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '${{github.event.pull_request.merged_at}} | fromdate'`      
  
