@@ -54,4 +54,4 @@ jobs:
         uses: isbang/sqs-action@v0.1.1
         with:
           sqs-url: ${{ secrets.sqs_url }}
-          message: "${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}"
+          message: "userName: ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}, Duration: ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"
