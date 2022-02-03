@@ -14,10 +14,10 @@ jobs:
     - name: Get startTime
       id: access
       run: |  
-        echo "GITHUB_CONTEXT=`jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`"
+        export GITHUB_CONTEXT=`jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
     - name: Set env
       run: echo $GITHUB_CONTEXT        
     - name: Echo access.json   
       run: echo "${{ steps.access.outputs.content }}" 
     - name: Echo access.json   
-      run: echo "${{ steps.access.outputs.GITHUB_CONTEXT }}" 
+      run: echo "${{ steps.access.GITHUB_CONTEXT }}" 
