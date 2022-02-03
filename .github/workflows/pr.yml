@@ -27,6 +27,6 @@ jobs:
       - name: Get startTime
         id: access
         run: |  
-          echo `jq -rRn --arg GITHUB_CONTEXT 2022-02-03T04:51:55Z '$GITHUB_CONTEXT | fromdate'`
+          echo `jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate'`
       
             
