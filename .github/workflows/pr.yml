@@ -32,4 +32,20 @@ jobs:
       - name: Echo access.json   
         #run: echo "${{ steps.access.outputs.content }}"   
         run: echo "${{fromJson(steps.access.outputs.content).aws_username}}"
+      - name: ConfigureAws  
+        if: |
+            github.event.pull_request.merged == true
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-1
 
+      - name: send message 
+        if: |
+            github.event.pull_request.merged == true
+        uses: isbang/sqs-action@v0.1.1
+        with:
+          sqs-url: ${{ secrets.sqs_url }}
+          #message: "${{steps.access.outputs.content}}, starttime: ${{ github.event.pull_request.merged_at }}"
+          message: ""aws_username": "${{fromJson(steps.access.outputs.content).aws_username}}" "startTime": "${{fromJson(steps.access.outputs.content).aws_username}}""
