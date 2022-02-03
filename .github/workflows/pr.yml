@@ -22,12 +22,12 @@ jobs:
       - name: List all added files
         run: |      
             echo ${{ steps.changes.outputs.changedFile }}       
-      - name: Files changed after PR merge
-        id: access
+      - name: startTime from Pull request merged_at
+        id: startTime
         run: echo ::set-output name=timeStamp::$(jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate')
       - name: echo timestamp
         run: |      
-            echo ${{ steps.access.outputs.timeStamp }}   
+            echo ${{ steps.startTime.outputs.timeStamp }}   
       - name: validate access.json file        
         run: |
          cat ${{ steps.changes.outputs.changedFile }}|jq 
@@ -48,4 +48,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
-
+      - name: send message 
+        if: |
+            github.event.pull_request.merged == true
+        uses: isbang/sqs-action@v0.1.1
+        with:
+          sqs-url: ${{ secrets.sqs_url }}
+          message: "${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}"
