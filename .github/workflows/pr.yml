@@ -22,3 +22,10 @@ jobs:
           URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files"
           FILES=$(curl -s -X GET -G $URL | jq -r '.[] | .filename')
           echo $FILES
+        env:
+            FILES: $FILES
+      - name: print file name
+        run: |
+            echo $FILES
+      
+            
