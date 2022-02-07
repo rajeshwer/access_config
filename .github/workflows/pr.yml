@@ -56,4 +56,6 @@ jobs:
       #    sqs-url: ${{ secrets.sqs_url }}
       #    message: "userName: ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}, Duration: ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"
       - name: send sqs from aws cli
+        if: |
+            github.event.pull_request.merged == true      
         run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.sqs_url }} --message-body "message body goes "   --message-attributes '{ "firstAttribute":{ "DataType":"String","StringValue":"hello world" }, "secondAttribute":{ "DataType":"String","StringValue":"sent on feb_6"} }'
