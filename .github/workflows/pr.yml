@@ -1,12 +1,11 @@
 name: CI
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    #types: [opened, synchronize,edited,closed]
-    #paths:
-    #  - 'access_request/accessRequest/**'      
-
+    types: [opened, synchronize,edited,closed]
+    paths:
+      - 'access_request/accessRequest/**' 
 jobs:
   build:
     runs-on: ubuntu-latest 
