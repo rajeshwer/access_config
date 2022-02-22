@@ -1,6 +1,6 @@
 {
 	"aws_username": "foo1",
 	"timeDuration_in_seconds": "3600",
-	"Reason for Prod access": "Pager"
+	"Reason_for_Prod_access": "Pager"
 
 }
