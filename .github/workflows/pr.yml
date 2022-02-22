@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  pull_request:
+  push:
     branches: [main]
-    types: [opened, synchronize,edited,closed]
-    paths:
-      - 'access_request/accessRequest/**'      
+    #types: [opened, synchronize,edited,closed]
+    #paths:
+    #  - 'access_request/accessRequest/**'      
 
 jobs:
   build:
@@ -48,6 +48,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
+      - name: debug
+        run: echo ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}
+      - name: debug
+        run: echo ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}} 
+      - name: debug
+        run: echo ${{fromJson(steps.readAccessFile.outputs.content).Reason_for_Prod_access}}        
+        
       #- name: send message 
       #  if: |
       #      github.event.pull_request.merged == true
@@ -55,7 +62,7 @@ jobs:
       #  with:
       #    sqs-url: ${{ secrets.sqs_url }}
       #    message: "userName: ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}, Duration: ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"
-      - name: send sqs from aws cli
-        if: |
-            github.event.pull_request.merged == true      
-        run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.sqs_url }} --message-body "message body goes "   --message-attributes '{ "userName":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).aws_username}}" }, "startTime":{ "DataType":"String","StringValue":"${{ steps.startTime.outputs.timeStamp }}"}, "duration":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"} }'
+      #- name: send sqs from aws cli
+      #  if: |
+      #      github.event.pull_request.merged == true      
+      #  run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.sqs_url }} --message-body "message body goes "   --message-attributes '{ "userName":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).aws_username}}" }, "startTime":{ "DataType":"String","StringValue":"${{ steps.startTime.outputs.timeStamp }}"}, "duration":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"} }'
