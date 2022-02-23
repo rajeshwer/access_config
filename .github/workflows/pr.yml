@@ -3,45 +3,45 @@ name: CI
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize,edited,closed]
+    types: [opened, synchronize, edited, closed]
     paths:
-      - 'access_request/accessRequest/**' 
+      - "access_request/accessRequest/**"
 jobs:
   build:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     name: Test changed-files
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0  
-          
+          fetch-depth: 0
+
       - name: Files changed after PR merge
         id: changes
         run: echo ::set-output name=changedFile::$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
       - name: List all added files
-        run: |      
-            echo ${{ steps.changes.outputs.changedFile }}       
+        run: |
+          echo ${{ steps.changes.outputs.changedFile }}
       - name: startTime from Pull request merged_at
         id: startTime
         run: echo ::set-output name=timeStamp::$(jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate')
       - name: echo timestamp
-        run: |      
-            echo ${{ steps.startTime.outputs.timeStamp }}   
-      - name: validate access.json file        
         run: |
-         cat ${{ steps.changes.outputs.changedFile }}|jq 
+          echo ${{ steps.startTime.outputs.timeStamp }}
+      - name: validate access.json file
+        run: |
+          cat ${{ steps.changes.outputs.changedFile }}|jq
       - name: Read access.json
         id: readAccessFile
         uses: juliangruber/read-file-action@v1
         with:
-            path: ${{ steps.changes.outputs.changedFile }}
-            
-      - name: Echo access.json   
-        #run: echo "${{ steps.readAccessFile.outputs.content }}"   
+          path: ${{ steps.changes.outputs.changedFile }}
+
+      - name: Echo access.json
+        #run: echo "${{ steps.readAccessFile.outputs.content }}"
         run: echo "${{fromJson(steps.readAccessFile.outputs.content).aws_username}}"
-      - name: ConfigureAws  
+      - name: ConfigureAws
         if: |
-            github.event.pull_request.merged == true
+          github.event.pull_request.merged == true
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -50,18 +50,18 @@ jobs:
       - name: debug
         run: echo ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}
       - name: debug
-        run: echo ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}} 
+        run: echo ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}
       - name: debug
-        run: echo ${{fromJson(steps.readAccessFile.outputs.content).Reason_for_Prod_access}}        
-        
-      #- name: send message 
+        run: echo ${{fromJson(steps.readAccessFile.outputs.content).Reason_for_Prod_access}}
+
+      #- name: send message
       #  if: |
       #      github.event.pull_request.merged == true
       #  uses: isbang/sqs-action@v0.1.1
       #  with:
       #    sqs-url: ${{ secrets.sqs_url }}
       #    message: "userName: ${{fromJson(steps.readAccessFile.outputs.content).aws_username}}, starttime: ${{ steps.startTime.outputs.timeStamp }}, Duration: ${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"
-      #- name: send sqs from aws cli
-      #  if: |
-      #      github.event.pull_request.merged == true      
-      #  run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.sqs_url }} --message-body "message body goes "   --message-attributes '{ "userName":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).aws_username}}" }, "startTime":{ "DataType":"String","StringValue":"${{ steps.startTime.outputs.timeStamp }}"}, "duration":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"} }'
+      - name: send sqs from aws cli
+        if: |
+          github.event.pull_request.merged == true
+        run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.sqs_url }} --message-body "message body goes "   --message-attributes '{ "userName":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).aws_username}}" }, "startTime":{ "DataType":"String","StringValue":"${{ steps.startTime.outputs.timeStamp }}"}, "duration":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"}, "reason":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).Reason_for_Prod_access}}"} }' }'
