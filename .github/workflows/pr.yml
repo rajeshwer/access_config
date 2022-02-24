@@ -20,11 +20,15 @@ jobs:
           aws-region: us-west-2
       - run: npm install
         working-directory: s3
+
+      - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
+        working-directory: s3        
       - uses: pulumi/actions@v3
         with:
           command: preview
           stack-name: dev
           comment-on-pr: true
+          upsert: true
           refresh: true
           work-dir: s3
         env:
