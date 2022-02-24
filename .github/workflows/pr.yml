@@ -18,16 +18,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
-      - run: pwd
-                  
-      - run: npm install
-        working-directory: s3
-      - run: pwd
-      - run: ls      
+      - name: run npm install for s3
+        run: npm install
+        working-directory: awsResource/s3
       - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
-        working-directory: s3  
-      - run: pwd 
-      - run: ls      
+        working-directory: awsResource/s3
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -35,7 +30,7 @@ jobs:
           #comment-on-pr: true
           upsert: true
           refresh: true
-          work-dir: s3
+          work-dir: awsResource/s3
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
@@ -46,7 +41,93 @@ jobs:
           #comment-on-pr: true
           upsert: true
           refresh: true
-          work-dir: s3
+          work-dir: awsResource/s3
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}          
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+      - name: run npm install for dynamodb
+        run: npm install
+        working-directory: awsResource/dynamodb
+      ##
+      - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
+        working-directory: awsResource/dynamodb
+      - uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: dynamodb_dev
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/dynamodb
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: dynamodb_dev
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/dynamodb
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
+      - name: run npm install for sqs
+        run: npm install
+        working-directory: awsResource/sqs
+      ##
+      - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
+        working-directory: awsResource/sqs
+      - uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: accessRequestSqsDev
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/sqs
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: accessRequestSqsDev
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/sqs
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
+      - name: run npm install for lambdaFunctions
+        run: npm install
+        working-directory: awsResource/lambda
+      ##
+      - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
+        working-directory: awsResource/lambda
+      - uses: pulumi/actions@v3
+        with:
+          command: preview
+          stack-name: accessRequestLambda
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/lambda
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: accessRequestLambda
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/lambda
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
