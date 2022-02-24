@@ -5,7 +5,7 @@ import { lambda } from "@pulumi/aws/types/enums";
 import { getArn } from "@pulumi/aws";
 
 const role = new aws.iam.Role("lambdaRole", {
-  name: "lambdaRole123",
+  name: "to-do",
   assumeRolePolicy: aws.iam.assumeRolePolicyForPrincipal({
     Service: "lambda.amazonaws.com",
   }),
@@ -49,7 +49,7 @@ const policy = new aws.iam.Policy("feb20", {
           "sqs:CreateQueue",
           "sqs:SetQueueAttributes",
         ],
-        Resource: "arn:aws:sqs:us-west-2:141231375059:feb20-c61a98b",
+        Resource: "to-do",
       },
     ],
   },
@@ -62,14 +62,14 @@ new aws.iam.RolePolicyAttachment(`lambdaRoleAttachment`, {
 
 new aws.iam.RolePolicyAttachment(`lambda-basic-execution`, {
   role: role.name,
-  policyArn: "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+  policyArn: "to-do",
 });
 
 const ProvideAccess = new aws.lambda.Function("ProvideAccess", {
   name: "ProvideAccess",
   runtime: "go1.x",
   handler: "dynamo",
-  s3Bucket: "lambdafunction-53ae4fb",
+  s3Bucket: "to-do",
   s3Key: "dynamo.zip",
   role: role.arn,
   timeout: 60,
@@ -79,7 +79,7 @@ const RevokeAccess = new aws.lambda.Function("RevokeAccess", {
   name: "RevokeAccess",
   runtime: "go1.x",
   handler: "cron",
-  s3Bucket: "lambdafunction-53ae4fb",
+  s3Bucket: "to-do",
   s3Key: "cron.zip",
   role: role.arn,
   timeout: 60,
@@ -88,7 +88,7 @@ const RevokeAccess = new aws.lambda.Function("RevokeAccess", {
 const triggerProvideAccess = new aws.lambda.EventSourceMapping(
   "triggerProvideAccess",
   {
-    eventSourceArn: "arn:aws:sqs:us-west-2:141231375059:feb20-c61a98b",
+    eventSourceArn: "to-do",
     functionName: ProvideAccess.arn,
   },
   {
