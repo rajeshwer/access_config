@@ -32,7 +32,7 @@ jobs:
         with:
           command: preview
           stack-name: dev
-          comment-on-pr: true
+          #comment-on-pr: true
           upsert: true
           refresh: true
           work-dir: s3
