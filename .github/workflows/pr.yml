@@ -23,9 +23,11 @@ jobs:
       - run: npm install
         working-directory: s3
       - run: pwd
+      - run: ls      
       - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
         working-directory: s3  
-      - run: pwd        
+      - run: pwd 
+      - run: ls      
       - uses: pulumi/actions@v3
         with:
           command: preview
