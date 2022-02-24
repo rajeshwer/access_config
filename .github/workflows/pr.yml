@@ -18,11 +18,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
+      - run: pwd
+                  
       - run: npm install
         working-directory: s3
-
+      - run: pwd
       - run: pulumi login s3://my-bucket-3ef97f2/pulumi/
-        working-directory: s3        
+        working-directory: s3  
+      - run: pwd        
       - uses: pulumi/actions@v3
         with:
           command: preview
