@@ -45,3 +45,16 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+
+      - uses: pulumi/actions@v3
+        name: get s3 bucket name to push package 
+        with:
+          command: output
+          stack-name: dev
+          #comment-on-pr: true
+          upsert: true
+          refresh: true
+          work-dir: awsResource/s3
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
