@@ -48,8 +48,8 @@ jobs:
 
       -  name: get s3 bucket name to push package
          id: pulumiStackOutput
-         run:  pulumi stack output -j | jq --raw-output "'"to_entries | map(\"::set-output name=\" + .key+\"::\" + (.value | tostring)+\"^\") | .[]"'" | xargs -d \"^\" echo 
+         run: echo ::set-output name=bucketname::$(pulumi stack output -j | jq -r .bucketName)
       -  name: get s3 bucket name to push package 
-         run: echo ${{ steps.pulumiStackOutput.outputs.bucketName }}
+         run: echo ${{ steps.pulumiStackOutput.outputs.bucketname }}
          
 
