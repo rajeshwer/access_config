@@ -49,8 +49,7 @@ jobs:
       - uses: pulumi/actions@v3
         name: get s3 bucket name to push package 
         with:
-          #command: output
-          args: stack output -j | jq --raw-output
+          command: output
           stack-name: dev
           #comment-on-pr: true
           #upsert: true
