@@ -51,7 +51,7 @@ jobs:
          working-directory: awsResource/s3
          env:
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
-         run: echo ::set-output name=bucketname::$(pulumi login s3://my-bucket-3ef97f2/pulumi/  > /dev/null 2>&1  && pulumi stack output -j | jq -r .bucketName)
+         run: echo ::set-output name=bucketname::$(pulumi login ${{ secrets.AWS_BUCKET }}  > /dev/null 2>&1  && pulumi stack output -j | jq -r .bucketName)
       -  name: get s3 bucket name to push package 
          run: echo ${{ steps.pulumiStackOutput.outputs.bucketname }}
          
