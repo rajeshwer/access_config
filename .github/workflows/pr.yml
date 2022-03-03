@@ -5,26 +5,21 @@ on:
     branches: [new]
     types: [opened, synchronize, edited, closed]
 jobs:
-  build:
+  changedfiles:
     runs-on: ubuntu-latest
-    name: Test changed-files
+    # Map a step output to a job output
+    outputs:
+      all: ${{ steps.changes.outputs.all}}
+      ts: ${{ steps.changes.outputs.ts }}
     steps:
-      - uses: actions/checkout@v2
+        # Make sure we have some code to diff.
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+            fetch-depth: 0
       - name: Get changed files
         id: changes
-        uses: tj-actions/changed-files@v17.2
-
-      - name: Get specific changed files
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v17.2
-        with:
-          files: |
-            **/*.json
-
-     
-      - name: Run step if only the files listed above change
-        if: steps.changed-files-specific.outputs.only_changed == 'true'
+        # Set outputs using the command.
         run: |
-         echo ${{steps.changed-files-specific.outputs.modified_files}}
+          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
+          echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .json$ | xargs)"
