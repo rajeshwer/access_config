@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [new]
-    types: [opened, synchronize, edited, closed]
 jobs:
   changedfiles:
     runs-on: ubuntu-latest
