@@ -21,10 +21,10 @@ jobs:
         uses: tj-actions/changed-files@v17.2
         with:
           files: |
-            *.json
+            **/*.json
 
      
       - name: Run step if only the files listed above change
-        #if: steps.changed-files-specific.outputs.only_changed == 'true'
+        if: steps.changed-files-specific.outputs.only_changed == 'true'
         run: |
          echo ${{steps.changed-files-specific.outputs.modified_files}}
