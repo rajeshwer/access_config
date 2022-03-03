@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: security_poc
+          ref: new
           fetch-depth: 0
       - name: Get changed files
         id: changes
