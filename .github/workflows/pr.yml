@@ -1,35 +1,31 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - new
   pull_request:
-    branches:
-      - new
-
+    branches: [new]
+    types: [opened, synchronize, edited, closed]
 jobs:
-  changedfiles:
+  build:
     runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      all: ${{ steps.changes.outputs.all}}
-      ts: ${{ steps.changes.outputs.ts }}
+    name: Test changed-files
     steps:
-        # Make sure we have some code to diff.
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Get changed files
         id: changes
-        # Set outputs using the command.
+        uses: tj-actions/changed-files@v17.2
+
+      - name: Get specific changed files
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v17.2
+        with:
+          files: |
+            **/*.json
+
+     
+      - name: Run step if only the files listed above change
+        if: steps.changed-files-specific.outputs.only_changed == 'true'
         run: |
-          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
-          echo "::set-output name=json::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .json$ | xargs)"
-      - name: Get changed all
-        run: echo ${{ steps.changes.outputs.all }}
-      - name: Get changed ts
-        run: echo ${{ steps.changes.outputs.json }}        
-        
+         echo ${{steps.changed-files-specific.outputs.any_changed}}
    
