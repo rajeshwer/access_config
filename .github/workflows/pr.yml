@@ -25,6 +25,9 @@ jobs:
         run: |
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
           echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .ts$ | xargs)"
-      - name: Get changed files
-        run: echo ${{all}} ${{ts}}
+      - name: Get changed all
+        run: echo ${{ steps.changes.outputs.all }}
+      - name: Get changed ts
+        run: echo ${{ steps.changes.outputs.ts }}        
+        
    
