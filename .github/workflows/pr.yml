@@ -28,12 +28,12 @@ jobs:
       - name: List all added files
 
         run: |
-          echo  ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}
+          echo  ${{steps.changed-files.outputs.all_changed_files}}
 
       - name: validate access.json file
  
         run: |
-          cat  ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}|jq
+          cat  ${{steps.changed-files.outputs.all_changed_files}}|jq
 
       - name: ls -r
         run: ls -R
@@ -44,4 +44,4 @@ jobs:
         if: |
           github.event.pull_request.merged == true        
         with:
-          path: ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}
+          path: ${{steps.changed-files.outputs.all_changed_files}}
