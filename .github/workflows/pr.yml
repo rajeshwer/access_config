@@ -5,7 +5,7 @@ on:
     branches: [new]
   pull_request:
     branches: [new]
-    types: [opened, synchronize, edited, closed, reopened]
+    types: [opened, synchronize, edited, reopened]
 jobs:
   build:
     runs-on: ubuntu-latest
