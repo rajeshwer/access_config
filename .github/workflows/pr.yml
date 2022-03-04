@@ -34,7 +34,7 @@ jobs:
  
         run: |
           cat  ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}|jq
-      - name: Read access.json
+
       - name: ls -r
         run: ls -R
       - name: Read access.json      
