@@ -1,7 +1,9 @@
+#######
+
 name: CI
 
 on:
-  push:
+  pull_request:
     branches: [new]
     #types: [opened, synchronize, edited, reopened, closed]
 jobs:
@@ -32,16 +34,14 @@ jobs:
  
         run: |
           cat  ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}|jq
-
-      - name: list all files
- 
-        run: ls -R
-          
       - name: Read access.json
+      - name: ls -r
+        run: ls -R
+      - name: Read access.json      
 
         id: readAccessFile
         uses: juliangruber/read-file-action@v1
-        #if: |
-        #  github.event.pull_request.merged == true        
+        if: |
+          github.event.pull_request.merged == true        
         with:
           path: ${{ toJSON(steps.changed-files.outputs.all_changed_files) }}
