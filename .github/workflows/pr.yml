@@ -40,3 +40,10 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
           path: ${{steps.changed-files-specific.outputs.all_changed_files}}
+          
+          
+        
+      - name: List all added files
+        if: steps.changed-files-specific.outputs.only_changed == 'true' && github.event_name == 'push
+        run: |
+          echo  ${{steps.changed-files-specific.outputs.all_changed_files}}          
