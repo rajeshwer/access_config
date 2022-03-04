@@ -1,6 +1,7 @@
 {
-	"aws_username": "ssdsdd",
-	"timeDuration_in_seconds": "3100",
-	"Reason_for_Prod_access": "Pager"
+	"aws_username": "rajeshwer",
+	"timeDuration_in_seconds": "3200",
+	"Reason_for_Prod_access": "Pager",
+	"AccessType": "readonly"
 
 }
