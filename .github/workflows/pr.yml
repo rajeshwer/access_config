@@ -9,21 +9,30 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest  # windows-latest | macos-latest
-    name: Test changed-files
+  changedfiles:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      all: ${{ steps.changes.outputs.all}}
+      json: ${{ steps.changes.outputs.json }}
     steps:
-      - uses: actions/checkout@v2
+        # Make sure we have some code to diff.
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
-
-        
-      - name: Get specific changed files
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v17.2
-        with:
-          files: |
-            **/*.json
-      - name: List all changed files
+          fetch-depth: 0
+      - name: Get changed files
+        id: changes
+        # Set outputs using the command.
         run: |
-          echo ${{ steps.changed-files-specific.outputs.all_changed_files }}
+          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
+          echo "::set-output name=json::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .json$ | xargs)"
+  lint:
+    runs-on: ubuntu-latest
+    # require the first job to have ran
+    needs: changedfiles
+    # only run there are changed files
+    if: ${{needs.changedfiles.outputs.json}}
+    steps:
+      - name: echo changed files
+        run: echo ${{needs.changedfiles.outputs.json}}
