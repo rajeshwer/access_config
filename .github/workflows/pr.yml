@@ -1,38 +1,32 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
+    branches: [security_poc]
+    types: [opened, synchronize,edited,closed]     
 
 jobs:
-  changedfiles:
-    runs-on: ubuntu-latest
-    # Map a step output to a job output
-    outputs:
-      all: ${{ steps.changes.outputs.all}}
-      json: ${{ steps.changes.outputs.json }}
+  build:
+    runs-on: ubuntu-latest 
+    name: Test changed-files
     steps:
-        # Make sure we have some code to diff.
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-      - name: Get changed files
+          ref: security_poc
+          fetch-depth: 0  
+      - name: echo repo name 
+        run: echo ${GITHUB_REPOSITORY} 
+          
+      - name: Files changed after PR merge
         id: changes
-        # Set outputs using the command.
-        run: |
-          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
-          echo "::set-output name=json::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .json$ | xargs)"
-  lint:
-    runs-on: ubuntu-latest
-    # require the first job to have ran
-    needs: changedfiles
-    # only run there are changed files
-    if: ${{needs.changedfiles.outputs.json}}
-    steps:
-      - name: echo changed files
-        run: echo ${{needs.changedfiles.outputs.json}}
+        run: echo ::set-output name=changedFile::$(curl -s -X GET -G https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls/${{ github.event.pull_request.number }}/files | jq -r '.[] | .filename')
+      - name: List all added files
+        run: |      
+            echo ${{ steps.changes.outputs.changedFile }}    
+      - name: Read access.json
+        id: readAccessFile
+        uses: juliangruber/read-file-action@v1
+        with:
+            path: ${{ steps.changes.outputs.changedFile }}
+      - name: Echo access.json     
+        run: echo "${{fromJson(steps.readAccessFile.outputs.content).aws_username}}"            
