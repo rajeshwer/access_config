@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [new]
   pull_request:
     branches: [new]
     types: [opened, synchronize, edited, closed]
