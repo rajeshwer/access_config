@@ -45,3 +45,19 @@ jobs:
           github.event.pull_request.merged == true        
         with:
           path: ${{steps.changed-files.outputs.all_changed_files}}
+      - name: startTime from Pull request merged_at
+        id: startTime
+        run: echo ::set-output name=timeStamp::$(jq -rRn --arg GITHUB_CONTEXT ${{github.event.pull_request.merged_at}} '$GITHUB_CONTEXT | fromdate')
+      - name: ConfigureAws
+        if: |
+          github.event.pull_request.merged == true
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: send sqs from aws cli
+        if: |
+          github.event.pull_request.merged == true
+        run: aws sqs send-message --region us-west-2 --queue-url ${{ secrets.SQS_URL }} --message-body "message body goes " --message-attributes '{ "userName":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).aws_username}}" }, "startTime":{ "DataType":"String","StringValue":"${{ steps.startTime.outputs.timeStamp }}"}, "duration":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).timeDuration_in_seconds}}"}, "reason":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).Reason_for_Prod_access}}"},"AccessType":{ "DataType":"String","StringValue":"${{fromJson(steps.readAccessFile.outputs.content).AccessType}}"}}'          
+          
