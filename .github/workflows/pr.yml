@@ -5,7 +5,7 @@ on:
     branches: [new]
   pull_request:
     branches: [new]
-    types: [opened, synchronize, edited, reopened]
+    types: [opened, synchronize, edited, reopened, closed]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,35 +15,13 @@ jobs:
         with:
           fetch-depth: 0
       - name: Get changed files
-        id: changes
-        uses: tj-actions/changed-files@v17.2
-
-      - name: Get specific changed files
-        id: changed-files-specific
-        uses: tj-actions/changed-files@v17.2
+        id: changed-files
+        uses: ./
         with:
-          since_last_remote_commit: "true"
-          files: |
-            **/*.json
-      - name: List all added files
-        if: steps.changed-files-specific.outputs.only_changed == 'true'
-        run: |
-          echo  ${{steps.changed-files-specific.outputs.all_changed_files}}
+           base_sha: ${{ github.event.pull_request.base.sha }}
 
-      - name: validate access.json file
-        if: steps.changed-files-specific.outputs.only_changed == 'true'      
+      - name: Show output
         run: |
-          cat  ${{steps.changed-files-specific.outputs.all_changed_files}}|jq
-      - name: Read access.json
-        if: steps.changed-files-specific.outputs.only_changed == 'true'      
-        id: readAccessFile
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ${{steps.changed-files-specific.outputs.all_changed_files}}
-          
-          
-        
-      - name: List all added files
-        if: steps.changed-files-specific.outputs.only_changed == 'true' && github.event_name == 'push'
-        run: |
-          echo  ${{steps.changed-files-specific.outputs.all_changed_files}}          
+          echo '${{ toJSON(steps.changed-files.outputs) }}'
+        shell:
+          bash  
