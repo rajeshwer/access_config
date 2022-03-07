@@ -1,13 +1,1 @@
-1
-mb
-sdsdsd
-scscsdsdsd
-mnkmn
-nbnbnb
-hjgvjghv
-sdsd
-sdsdsdsdsdasassa
-sdsdds
-dsdsd
-jkhjh
-asassajbjb
+[ref](./awsResource)
