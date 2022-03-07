@@ -1,1 +1,1 @@
-[ref](.././awsResource)
+[ref](../.github/workflows/pr.yml)
