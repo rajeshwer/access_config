@@ -1,1 +1,1 @@
-[ref](../access_config)
+[ref](./access_config)
