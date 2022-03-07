@@ -1,1 +1,1 @@
-[ref](.././access_config)
+[ref](.././awsResource)
