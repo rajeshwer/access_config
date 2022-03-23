@@ -36,11 +36,8 @@ jobs:
       - name: ls -r
         run: ls -R
       - name: Read access.json
-        id: readAccessFile
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: ${{steps.changed-files.outputs.all_changed_files}}
+        run: |
+          value=`${{steps.changed-files.outputs.all_changed_files}}`
       - name: echo
-
         run: |
           echo  ${{steps.readAccessFile.outputs.content}}
