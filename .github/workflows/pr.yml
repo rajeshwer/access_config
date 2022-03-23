@@ -36,8 +36,9 @@ jobs:
       - name: ls -r
         run: ls -R
       - name: Read access.json
+        id: readAccessFile
         run: |
-          value=`${{steps.changed-files.outputs.all_changed_files}}`
+          value=${{steps.changed-files.outputs.all_changed_files}}
       - name: echo
         run: |
           echo  ${{steps.readAccessFile.outputs.content}}
