@@ -39,7 +39,7 @@ jobs:
         id: readAccessFile
         run: echo "read file"
         env: |
-          value=${{steps.changed-files.outputs.all_changed_files}}
+          value: ${{steps.changed-files.outputs.all_changed_files}}
           
       - name: echo
         run: |
