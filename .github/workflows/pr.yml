@@ -37,10 +37,8 @@ jobs:
         run: ls -R
       - name: Read access.json
         id: readAccessFile
-        run: |
+        env: |
           value=${{steps.changed-files.outputs.all_changed_files}}
-          echo $value
-          cat $value
           
       - name: echo
         run: |
