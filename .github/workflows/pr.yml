@@ -38,7 +38,7 @@ jobs:
       - name: Read access.json
         id: readAccessFile
         run: echo "read file"
-        env: |
+        env: 
           value: '${{steps.changed-files.outputs.all_changed_files}}'
           
       - name: echo
