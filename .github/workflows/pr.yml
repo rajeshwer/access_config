@@ -39,6 +39,9 @@ jobs:
         id: readAccessFile
         run: |
           value=${{steps.changed-files.outputs.all_changed_files}}
+          echo $value
+          cat $value
+          
       - name: echo
         run: |
           echo $value
