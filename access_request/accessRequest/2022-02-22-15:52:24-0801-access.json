@@ -1,6 +1,6 @@
 {
 	"aws_username": "rajjh11esh",
-	"timeDuration_in_seconds": "500",
+	"timeDuration_in_seconds": "5100",
 	"Reason_for_Prod_access": "bugfix",
 	"AccessType": "write"
 }
